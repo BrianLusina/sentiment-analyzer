@@ -1,20 +1,65 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Polarity from "./components/Polarity";
+import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button';
+import Paper from 'material-ui/Paper';
+
+const style = {
+    marginLeft: 12,
+};
 
 class App extends Component {
+  constructor(props, context){
+    super(props, context);
+    this.state = {
+      sentence: "",
+      polarity: undefined
+    }
+  }
+
+  __analyzeSentence = () => {
+      fetch('http://localhost:8080/sentiment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({sentence: this.textField.getValue()})
+      })
+      .then(response => response.json())
+      .then(data => this.setState(data));
+  }
+
+  onEnterPress = e =>{
+    if(e.key === "Enter"){
+      this.__analyzeSentence()
+    }
+  }
+
+  onInputChange = e => {
+    this.setState({
+      sentence: e.target.value
+    })
+  }
+
   render() {
+    const { polarity, sentence } = this.state;
+    const polarityComponent = polarity !== undefined ? <Polarity sentence={sentence} polarity={polarity}/> : null;
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+        <div className="centerize">
+            <Paper zDepth={1} className="content">
+                <h2>Sentiment Analyser</h2>
+                <TextField ref={ref => this.textField = ref} onKeyUp={this.onEnterPress}
+                          hintText="Type your sentence." onChange={this.onInputChange}/>
+                <Button variant="raised" style={style} onClick={this.__analyzeSentence}>
+                  Send
+                </Button>
+                {polarityComponent}
+            </Paper>
+        </div>
+      );
+      
   }
 }
 
