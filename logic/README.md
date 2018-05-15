@@ -2,6 +2,32 @@
 
 Logic handling actual sentiment analysis
 
+## Running the application locally
+
+Before running the application, create a virtual environment to install required dependencies.
+
+```bash
+virtualenv venv -p python3
+```
+
+> creates a virtual environment based off of python 3
+
+Ensure you have installed all the requirements.
+
+```bash
+pip install -r requirements.txt
+```
+
+> Installs the requirements to the venv directory
+
+If using [pipenv](https://github.com/pypa/pipenv)
+
+```bash
+pipenv install
+```
+
+> This will setup the venv and install dependencies from the [Pipfile.lock](./Pipfile.lock)
+
 ## Building the Docker Container
 
 ``` bash
