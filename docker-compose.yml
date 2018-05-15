@@ -1,0 +1,49 @@
+version: "3.0"
+
+services:
+  client:
+    restart: always
+    build: ./client
+    ports:
+      - "3000:80"
+    expose:
+      - "3000"
+    volumes:
+      - /usr/share/nginx/html/
+    depends_on:
+      - server
+
+  server:
+    restart: always
+    build: ./server
+    ports:
+      - "5000:5000"
+    expose:
+      - "8000"
+    volumes:
+     - /usr/src/app/app/static
+    command: python manage.py runserver
+    depends_on:
+     - postgres
+
+  redis:
+    restart: always
+    build: ./redis
+    depends_on:
+      - server
+
+  data:
+    image: postgres:9.6
+    volumes:
+      - /var/lib/postgresql
+    command: "true"
+
+  postgres:
+    restart: always
+    build: ./postgresql
+    ports:
+      - "5432:5432"
+
+
+
+
