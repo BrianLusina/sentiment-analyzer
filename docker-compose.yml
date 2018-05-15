@@ -13,37 +13,26 @@ services:
     depends_on:
       - server
 
-  server:
+  webapp:
     restart: always
-    build: ./server
+    build: ./webapp
     ports:
-      - "5000:5000"
+      - "8080:8080"
     expose:
-      - "8000"
+      - "8080"
     volumes:
      - /usr/src/app/app/static
     command: python manage.py runserver
     depends_on:
-     - postgres
+     - logic
 
-  redis:
+  logic:
     restart: always
-    build: ./redis
-    depends_on:
-      - server
-
-  data:
-    image: postgres:9.6
-    volumes:
-      - /var/lib/postgresql
-    command: "true"
-
-  postgres:
-    restart: always
-    build: ./postgresql
+    build: ./logic
     ports:
-      - "5432:5432"
-
-
+      - "5000:5000"
+    expose:
+      - "5000"
+    command: python manage.py runserver
 
 
