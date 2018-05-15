@@ -8,10 +8,8 @@ services:
       - "3000:80"
     expose:
       - "3000"
-    volumes:
-      - /usr/share/nginx/html/
     depends_on:
-      - server
+      - webapp
 
   webapp:
     restart: always
@@ -20,8 +18,6 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    volumes:
-     - /usr/src/app/app/static
     command: python manage.py runserver
     depends_on:
      - logic
