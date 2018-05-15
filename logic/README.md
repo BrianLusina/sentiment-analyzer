@@ -28,6 +28,23 @@ pipenv install
 
 > This will setup the venv and install dependencies from the [Pipfile.lock](./Pipfile.lock)
 
+Run the application with
+
+``` bash
+python -m textblob.download_corpora
+python sentiment_analysis.py
+```
+
+> Runs the application on http:0.0.0.0:5000
+
+Now you can send POST requests to http:0.0.0.0:5000/analyse/sentiment with body:
+
+```bash
+{
+    "sentence": "I adore pets!"
+}
+```
+
 ## Building the Docker Container
 
 ``` bash
