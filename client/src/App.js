@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, createRef} from 'react';
 import './App.css';
 import Polarity from "./components/Polarity";
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
+import axios from "axios";
 
 const style = {
     marginLeft: 12,
@@ -14,20 +15,35 @@ class App extends Component {
     super(props, context);
     this.state = {
       sentence: "",
-      polarity: undefined
+      polarity: undefined,
+      error: {}
     }
+
+    this.textField = createRef()
   }
 
   __analyzeSentence = () => {
-      fetch('http://localhost:8080/sentiment', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({sentence: this.textField.getValue()})
-      })
-      .then(response => response.json())
-      .then(data => this.setState(data));
+      const { sentence } = this.state;
+      axios.post("http://0.0.0.0:8080/sentiment", {
+        sentence
+       }).then(response => {
+         const { sentence, polarity } = response.data;
+
+         this.setState({
+           sentence, polarity
+         })
+       }).catch(error => {
+         this.setState({error})
+       })
+      // fetch('http://0.0.0.0:8080/sentiment', {
+      //   method: 'POST',
+      //   headers: {
+      //       'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({sentence})
+      // })
+      // .then(response => response.json())
+      // .then(data => this.setState(data));
   }
 
   onEnterPress = e =>{
@@ -50,7 +66,7 @@ class App extends Component {
         <div className="centerize">
             <Paper zDepth={1} className="content">
                 <h2>Sentiment Analyser</h2>
-                <TextField ref={ref => this.textField = ref} onKeyUp={this.onEnterPress}
+                <TextField ref={this.textField} onKeyUp={this.onEnterPress}
                           hintText="Type your sentence." onChange={this.onInputChange}/>
                 <Button variant="raised" style={style} onClick={this.__analyzeSentence}>
                   Send

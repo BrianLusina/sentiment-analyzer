@@ -17,7 +17,7 @@ apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
-// mainClassName = 'WebAppKt'
+mainClassName = 'WebAppKt'
 
 sourceCompatibility = 1.8
 compileKotlin { kotlinOptions.jvmTarget = "1.8" }
@@ -36,6 +36,7 @@ dependencies {
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-client-core:$ktor_version"
     implementation "io.ktor:ktor-client-apache:$ktor_version"
+    implementation "io.ktor:ktor-client-json:$ktor_version"
     implementation "ch.qos.logback:logback-classic:1.2.1"
     implementation "io.ktor:ktor-gson:$ktor_version"
 
