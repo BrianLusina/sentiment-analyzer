@@ -1,5 +1,5 @@
-group 'SaWebApp'
-version '1.0-SNAPSHOT'
+group 'WebApp'
+version '1.0.0'
 
 buildscript {
     ext.kotlin_version = '1.2.41'
@@ -7,23 +7,58 @@ buildscript {
 
     repositories {
         mavenCentral()
+//        maven {
+//            url "https://plugins.gradle.org/m2/"
+//        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
     }
 }
 
+
+// apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
-mainClassName = 'WebAppKt'
+
+// mainClassName = 'io.ktor.server.netty.DevelopmentEngine'
+mainClassName = 'com.sentimentanalyser.web.WebAppKt'
 
 sourceCompatibility = 1.8
-compileKotlin { kotlinOptions.jvmTarget = "1.8" }
+
+compileKotlin {
+    kotlinOptions {
+        includeRuntime = true
+        jvmTarget = "1.8"
+    }
+}
+
 compileTestKotlin { kotlinOptions.jvmTarget = "1.8" }
 
 kotlin { experimental { coroutines "enable" } }
+
+jar {
+    manifest{
+        attributes "Main-Class": "com.sentimentanalyser.web.WebAppKt"
+    }
+
+    from {
+        String[] include = [
+                "kotlin-runtime-${kotlin_version}.jar",
+                "kotlin-stdlib-${kotlin_version}.jar"
+        ]
+
+        // This line of code recursively collects and copies all of a project's files
+        // and adds them to the JAR itself. One can extend this task, to skip certain
+        // files or particular types at will
+        configurations.compile
+                .findAll { include.contains(it.name) }
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
 
 repositories {
     mavenCentral()

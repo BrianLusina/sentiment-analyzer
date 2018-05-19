@@ -1,3 +1,5 @@
+package com.sentimentanalyser.web
+
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.client.HttpClient
@@ -19,17 +21,16 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import java.text.DateFormat
 
-
 fun main(args: Array<String>) {
-    val client = HttpClient(Apache){
-        install(JsonFeature){
+    val client = HttpClient(Apache) {
+        install(JsonFeature) {
             serializer = GsonSerializer()
         }
     }
 
     val server = embeddedServer(Netty, port = 8080) {
 
-        install(ContentNegotiation){
+        install(ContentNegotiation) {
             gson {
                 setDateFormat(DateFormat.LONG)
                 setPrettyPrinting()
@@ -42,11 +43,11 @@ fun main(args: Array<String>) {
                 call.respondText("Sentiment Analyser!", ContentType.Text.Plain)
             }
 
-            post("/sentiment"){
+            post("/sentiment") {
                 val sentence = call.receive<SentenceEntity>()
 
                 // post to logic service url
-                val sentiment = client.post<SentimentEntity>(LOGIC_SERVICE_URL){
+                val sentiment = client.post<SentimentEntity>(LOGIC_SERVICE_URL) {
                     contentType(ContentType.Application.Json)
                     body = sentence
                 }
