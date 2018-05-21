@@ -18,7 +18,7 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    command: python manage.py runserver
+    command: java -server -Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar webapp-1.0.0.jar
     depends_on:
      - logic
 
@@ -29,6 +29,4 @@ services:
       - "5000:5000"
     expose:
       - "5000"
-    command: python manage.py runserver
-
-
+    command: python sentiment_analysis.py

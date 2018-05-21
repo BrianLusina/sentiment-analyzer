@@ -17,5 +17,4 @@ RUN python -m textblob.download_corpora
 
 EXPOSE 5000
 
-ENTRYPOINT ["python"]
-CMD ["sentiment_analysis.py"]
+CMD ["python", "sentiment_analysis.py"]
