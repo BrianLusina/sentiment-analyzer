@@ -1,5 +1,3 @@
-package com.sentimentanalyser.web
-
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.client.HttpClient
