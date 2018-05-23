@@ -18,7 +18,7 @@ services:
       - "8080:8080"
     expose:
       - "8080"
-    command: java -server -Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar webapp-1.0.0.jar
+    command: java -server -Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar webapp.jar
     depends_on:
      - logic
 
