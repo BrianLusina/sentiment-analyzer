@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod                          
+metadata:
+        name: sa-client
+spec:
+        containers:
+                - image: thelusina/sentiment-analysis-client 
+                  name: sa-client
+                  ports:
+                          - containerPort: 80
