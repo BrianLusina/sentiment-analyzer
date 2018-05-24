@@ -24,7 +24,7 @@ class App extends Component {
 
   __analyzeSentence = () => {
       const { sentence } = this.state;
-      axios.post("http://0.0.0.0:8080/sentiment", {
+      axios.post("http://localhost:8080/sentiment", {
         sentence
        }).then(response => {
          const { sentence, polarity } = response.data;
