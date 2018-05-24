@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+        name: logic-deployment
+spec:
+        replicas: 2
+        minReadySeconds: 15
+        strategy:
+                type: RollingUpdate
+                rollingUpdate:
+                        maxUnavailable: 1
+                        maxSurge: 1
+        template:
+                metadata:
+                        labels:
+                                app: logic
+                spec:
+                        containers:
+                                - image: thelusina/sentiment-analysis-logic
+                                  imagePullPolicy: Always
+                                  name: logic
+                                  ports:
+                                          - containerPort: 5000
+

@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+        name: webapp
+spec:
+        replicas: 2
+        minReadySeconds: 15
+        strategy:
+                type: RollingUpdate
+                rollingUpdate:
+                        maxUnavailable: 1
+                        maxSurge: 1
+        template:
+                metadata:
+                        labels:
+                                app: webapp
+                spec:
+                        containers:
+                                - image: thelusina/sentiment-analysis-webapp
+                                  imagePullPolicy: Always
+                                  name: webapp
+                                  env:
+                                          - name: LOGIC_API_URL
+                                            value: "http://logic"
+                                  ports:
+                                          - containerPort: 8080

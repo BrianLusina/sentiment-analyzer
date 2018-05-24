@@ -88,7 +88,7 @@ Will start up the docker network for the sentiment analysis application.
 
 ### Running the application with Kubenetes (Minikube)
 
-
+TODO
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/uses-js.svg)](https://forthebadge.com)
