@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Pod                          
 metadata:
         name: sa-client
+        labels:
+                app: sa-client
 spec:
         containers:
                 - image: thelusina/sentiment-analysis-client 
