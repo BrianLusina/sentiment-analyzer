@@ -3,3 +3,5 @@
 .envrc
 .idea/
 .gradle/
+.vagrant/
+*.log
