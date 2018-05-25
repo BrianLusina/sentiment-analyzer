@@ -28,19 +28,46 @@ yarn start
 
 This will start up the client application after installing all dependencies.
 
+You can then create a production build with:
+
+```bash
+yarn build
+```
+
+And start up the production build with [serve](https://www.npmjs.com/package/serve) or [http-server](https://github.com/indexzero/http-server).
+
+```bash
+serve -s build
+# if using http-server
+http-server ./build
+```
+
 #### Running the webapp
 
 This piece of the application communicates with the logic and sends data back to the client with the Polarity of the given sentence sent from the client application.
 
 Running the webapp requires installation of [gradle](https://gradle.org/) which is the build tool used. Luckily the [gradle wrapper](./webapp/gradlew) will setup the installation of the dependencies needed for running the web app.
 
+You will also need to install [java](https://java.com/en/download/) which can be done using [sdkman](http://sdkman.io/).
+
 ```bash
 cd webapp
 ./gradlew run
 ```
-This will run the web app application
 
-NB: You can install gradle using [sdkman](http://sdkman.io/) and start up the application the very same way.
+This will run the web app application.
+
+You can create a production build with:
+
+```bash
+./gradlew build
+```
+
+And run the application with:
+
+```bash
+java -server -Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar ./build/libs/webapp.jar
+```
 
 #### Running the logic
 
@@ -88,7 +115,37 @@ Will start up the docker network for the sentiment analysis application.
 
 ### Running the application with Kubenetes (Minikube)
 
-TODO
+Running the application in kubernetes locally will require you to download [minikube](https://github.com/kubernetes/minikube) and download [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+
+Afterwards you should be able to start up minikube:
+
+```bash
+minikube start
+```
+
+> This will setup post-installation requirements.
+
+Then start up the individual pods of the application with kubectl:
+
+```bash
+kubectl apply -f client/client-service-lb.yaml
+kubectl apply -f client/client-pod.yaml
+kubectl apply -f client/client-deployment.yaml
+kubectl apply -f webapp/webapp-service.yaml
+kubectl apply -f webapp/webapp-deployment.yaml
+kubectl apply -f webapp/logic-deployment.yaml
+kubectl apply -f webapp/logic-service.yaml
+```
+
+> These start up the deployment, services and pods for the micro services.
+
+You can monitor with:
+
+``` bash
+kubectl get pods --watch
+```
+
+Instructions for each are setup in the Readme(s) in each service.
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/uses-js.svg)](https://forthebadge.com)
