@@ -2,27 +2,27 @@
 
 Front facing part of application.
 
-## Starting the Web App Locally
+## Starting the Web App Locally with Docker
 
 `$ yarn start`
 
-## Building the application
+### Building the application
 
 `$ yarn build`
 
-## Building the container
+### Building the container
 
-`$ docker build -f Dockerfile -t $DOCKER_USER_ID/sentiment-analysis-client .`
+`$ docker build -t $DOCKER_USER_ID/sentiment-analysis-client .`
 
-## Running the container
+### Running the container
 
-`$ docker run -d -p 80:80 $DOCKER_USER_ID/sentiment-analysis-client`
+`$ docker run -p 80:80 $DOCKER_USER_ID/sentiment-analysis-client`
 
-## Pushing the container
+### Pushing the container
 
 `$ docker push $DOCKER_USER_ID/sentiment-analysis-client`
 
-### Kubernetes
+## Using Kubernetes
 
 The kubernetes setup instructions for the client are in the yaml files provided. The [client-pod](./client-pod.yaml).
 
@@ -145,3 +145,66 @@ Opening kubernetes service default/client-load-balancer in default browser...
 ```
 
 This will open up the application in a browser window pointing to the services IP. After the Service receives the request, it will forward the call to one of the pods (which one doesn’t matter). This abstraction enables us to see and act with the numerous pods as one unit, using the Service as an entry point.
+
+To run the application as a deployment, the [client-deployment](./client-deployment.yaml) file has the following instructions:
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+        name: client-deployment
+spec:
+        replicas: 2
+        minReadySeconds: 15
+        strategy:
+                type: RollingUpdate
+                rollingUpdate:
+                        maxUnavailable: 1
+                        maxSurge: 1
+        template:
+                metadata:
+                        labels:
+                                app: client
+                spec:
+                        containers:
+                                - image: thelusina/sentiment-analysis-client
+                                  imagePullPolicy: Always
+                                  name: client
+                                  ports:
+                                          - containerPort: 80
+
+
+```
+
+1. __Kind__: A deployment.
+2. __Replicas__ is a property of the deployments Spec object that defines how many pods we want to run. So only 2.
+3. __Type__ specifies the strategy used in this deployment when moving from the current version to the next. The strategy RollingUpdate ensures Zero Downtime deployments.
+4. __MaxUnavailable__ is a property of the RollingUpdate object that specifies the maximum unavailable pods allowed (compared to the desired state) when doing a rolling update. For our deployment which has 2 replicas this means that after terminating one Pod, we would still have one pod running, this way keeping our application accessible.
+5. __MaxSurge__ is another property of the RollingUpdate object that defines the maximum amount of pods added to a deployment(compared to the desired state). For our deployment, this means that when moving to a new version we can add one pod, which adds up to 3 pods at the same time.
+6. __Template__: specifies the pod template that the Deployment will use to create new pods
+7. __app__: `client` the label to use for the pods created by this template.
+8. __ImagePullPolicy__ when set to Always, it will pull the container images on each redeployment.
+
+You can run the deployment with:
+
+```bash
+$ kubectl apply -f client-deployment.yaml
+deployment.extensions "client-deployment" created
+```
+
+You can check that it is running with:
+
+```bash
+$ kubectl get pods
+NAME                                    READY     STATUS    RESTARTS   AGE
+client                                  1/1       Running   0          24m
+client-deployment-8fdfcc5fb-ndzpr       1/1       Running   0          24s
+client-deployment-8fdfcc5fb-rqdx8       1/1       Running   0          24s
+```
+
+The first client pod is the pod we created manually. That can be deleted with:
+
+``` bash
+$ kubectl delete pod client
+pod "client" deleted
+```
