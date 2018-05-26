@@ -1,0 +1,57 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+        - '6'
+        - '7'
+        - '8'
+        - '9'
+        - '10'
+
+python:
+        - 2.7
+        - 3.5
+        - 3.6
+jdk:
+        - openjdk7
+        - oraclejdk7
+        - oraclejdk8
+
+services:
+        - docker
+
+before_cache:
+        - rm -f  $HOME/webapp/.gradle/caches/modules-2/modules-2.lock
+        - rm -fr $HOME/webapp/.gradle/caches/*/plugin-resolution/
+
+cache:
+        directories:
+                - "$HOME/logic/venv/"
+                - "$HOME/client/node_modules/"
+                - "$HOME/webapp/.gradle/caches/"
+                - "$HOME/webapp/.gradle/wrapper/"
+before_install:
+        - sudo apt-get -y install python3-pip python-dev
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -U pipenv
+script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - cd client && npm install
+        - npm run test
+        - npm run build
+        - docker build -t $DOCKER_USERNAME/sentiment-analyser-client .
+        - docker push $DOCKER_USERNAME/sentiment-analyser-client
+        - cd ..
+        - cd logic
+        - sudo pip3 install -r requirements.txt
+        - docker build -t $DOCKER_USERNAME/sentiment-analyser-logic .
+        - docker push $DOCKER_USERNAME/sentiment-analyser-logic
+        - cd ..
+        - cd webapp
+        - "./gradlew build"
+        - docker build -t $DOCKER_USERNAME/sentiment-analyser-webapp .
+        - docker push $DOCKER_USERNAME/sentiment-analyser-webapp
+
+env:
+        matrix:
+                secure: eoqfNNqucFL7R8h4/M9O4/BBYHBMIHLEHjzQ65ulevnky6RJOezLGRuMdVEHP1r/bMAWdg/Wh/kGvRHmbe0KeZCU+KrUxf13/shjLUvDJqV+aTUnXxUUz7PQr1et/FnFruS83sme3TsWCrr/rlY1D0okSDYeEWlm51nsogN6pGqmpblgXSDbgLYSBOUgbHMM3xFVLxI6Hqk4X/WkH9xHXjkNO6hoVS4DMXty29Lq5bhtKqFWOfRWzJRNi+/PXffRZTFrl9MZ3KqLkzeGJNSiyrMMikB+WHrRR4DTA4t0M9qnFQiubko21ELZN7YCDbGpTAuncZ16fpKOTWtmxj7FB3miGuBbh+W2GfTD01RPCbSz+w/5RNb/6FJVHZWBOZ+GIyWLZCphe45sJI2q9yidwZm2kO0t+/SxAIiwe6Pn6+I7MG3oFFAJaC6UA6ThV+eZOnDjceJ9SSVpnOTJEekBC5eW3jIfh8tKfmMXQ8+AFIhstkZ6fkVVbiM3EYFru2gnbT1hmLDdsaKpHrGJ1XlCXM+oL3VQZyOl97BiYg8t7C1r4K9dQoXokHbUgevIi9GAtCDa81EuI4LipkYT1WSBdX4/K50fTG9HWN8322uzx2MRJDYDbviPj5GQ95fpAqJEy0Bq7SPwks11SbPXroQYogWBI6Q19dezSeYtCw0pBAU=
