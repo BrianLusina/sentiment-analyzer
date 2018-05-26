@@ -1,5 +1,7 @@
 # Sentiment Analysis App
 
+[![Build Status](https://travis-ci.org/BrianLusina/sentiment-analyzer.svg?branch=master)](https://travis-ci.org/BrianLusina/sentiment-analyzer)
+
 A micro-serviced sentiment analysis application with a [React](https://reactjs.org/) frontend, [Kotlin](https://kotlinlang.org/) webapp and [Flask/Python](http://flask.pocoo.org/) logic.
 
 This simply analyses sentences from user and returns the sentiment analysis to the user.
