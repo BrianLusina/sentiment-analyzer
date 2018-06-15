@@ -8,6 +8,8 @@ services:
       - "3000:80"
     expose:
       - "3000"
+    links:
+      - webapp
     depends_on:
       - webapp
 
@@ -18,6 +20,8 @@ services:
       - "8080:8080"
     expose:
       - "8080"
+    links:
+      - logic
     command: java -server -Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar webapp.jar
     depends_on:
      - logic

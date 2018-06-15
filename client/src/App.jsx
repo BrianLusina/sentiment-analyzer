@@ -4,7 +4,7 @@ import Polarity from "./components/Polarity";
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
-import axios from "axios";
+// import axios from "axios";
 
 const style = {
     marginLeft: 12,
@@ -24,26 +24,26 @@ class App extends Component {
 
   __analyzeSentence = () => {
       const { sentence } = this.state;
-      axios.post("http://webapp/sentiment", {
-        sentence
-       }).then(response => {
-         const { sentence, polarity } = response.data;
+      // axios.post("http://webapp:8080/sentiment", {
+      //   sentence
+      //  }).then(response => {
+      //    const { sentence, polarity } = response.data;
 
-         this.setState({
-           sentence, polarity
-         })
-       }).catch(error => {
-         this.setState({error})
-       })
-      // fetch('http://0.0.0.0:8080/sentiment', {
-      //   method: 'POST',
-      //   headers: {
-      //       'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({sentence})
-      // })
-      // .then(response => response.json())
-      // .then(data => this.setState(data));
+      //    this.setState({
+      //      sentence, polarity
+      //    })
+      //  }).catch(error => {
+      //    this.setState({error})
+      //  })
+      fetch('http://webapp.0:8080/sentiment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({sentence})
+      })
+      .then(response => response.json())
+      .then(({ sentence, polarity }) => this.setState({ sentence, polarity}));
   }
 
   onEnterPress = e =>{

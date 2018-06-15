@@ -21,6 +21,6 @@ spec:
                                   name: webapp
                                   env:
                                           - name: LOGIC_API_URL
-                                            value: "http://logic"
+                                            value: "http://logic-service"
                                   ports:
                                           - containerPort: 8080

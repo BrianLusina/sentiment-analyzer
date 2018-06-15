@@ -5,9 +5,12 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.post
+import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.request.receive
 import io.ktor.response.respond
@@ -33,6 +36,15 @@ fun main(args: Array<String>) {
                 setDateFormat(DateFormat.LONG)
                 setPrettyPrinting()
             }
+        }
+
+        install(DefaultHeaders){
+            header("Access-Control-Allow-Origin", "*")
+            header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
+        }
+
+        install(CORS){
+            method(HttpMethod.Options)
         }
 
         routing {
