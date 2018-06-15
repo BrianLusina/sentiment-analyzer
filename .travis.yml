@@ -48,7 +48,7 @@ script:
         - docker push $DOCKER_USERNAME/sentiment-analyser-logic
         - cd ..
         - cd webapp
-        - "./gradlew build"
+        - "gradle build"
         - docker build -t $DOCKER_USERNAME/sentiment-analyser-webapp .
         - docker push $DOCKER_USERNAME/sentiment-analyser-webapp
 
