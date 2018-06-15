@@ -35,7 +35,7 @@ before_install:
         - sudo pip3 install -U setuptools
         - sudo pip3 install -U pipenv
 script:
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
         - cd client && npm install
         - npm run test
         - npm run build
