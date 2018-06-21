@@ -22,7 +22,7 @@ services:
       - "8080"
     links:
       - logic
-    command: java -server -Xms4g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar webapp.jar
+    command: java -server -jar webapp.jar
     depends_on:
      - logic
 
