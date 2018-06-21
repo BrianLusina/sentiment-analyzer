@@ -35,7 +35,7 @@ class App extends Component {
       //  }).catch(error => {
       //    this.setState({error})
       //  })
-      fetch('http://webapp.0:8080/sentiment', {
+      fetch('http://webapp:8080/sentiment', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
